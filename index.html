@@ -2,7 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100d0b">
+<meta name="description" content="ТЯЖЁЛЫЙ ВОЗДУХ — кукольный театр в пяти явлениях. Пьеса о том, как существу отказывают в его собственном чувстве.">
 <title>ТЯЖЁЛЫЙ ВОЗДУХ — кукольный театр</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -282,11 +284,88 @@ body.open .drape.r{transform:translateX(101%)}
   text-shadow:0 0 70px rgba(233,183,58,.4)}
 
 @media(max-width:760px){
-  .line{grid-template-columns:1fr;gap:.2rem}
-  .who{text-align:left;padding-top:0}
-  .narr,.think{margin-left:0}
-  body{cursor:auto}
+  body{cursor:auto;font-size:17px}
   #puppeteer,#hook{display:none}
+  #sound{cursor:pointer}
+  .doll,.ticket{cursor:pointer}
+
+  section{padding:0 7vw}
+  .act{padding:13vh 7vw 9vh}
+  .act-note{margin-bottom:3rem}
+
+  /* реплики в колонку */
+  .line{grid-template-columns:1fr;gap:.15rem;margin-bottom:1.5rem}
+  .who{text-align:left;padding-top:0;font-size:.58rem;letter-spacing:.24em;color:var(--ticket);opacity:.75}
+  .said{font-size:1.14rem;line-height:1.48}
+  .narr,.think{margin-left:0;margin-right:0}
+  .narr{margin-top:2.4rem;margin-bottom:2.4rem;font-size:1rem}
+  .think{margin-top:3.4rem;margin-bottom:3.4rem;max-width:none}
+
+  /* афиша */
+  .afisha .over{letter-spacing:.28em;margin-bottom:1.6rem;font-size:.58rem}
+  .afisha .sub{font-size:.98rem;margin-top:1.6rem}
+  .afisha .rule{height:3.4rem;margin-top:2rem}
+  .pelmet{height:11vh}
+  .scrollhint{font-size:.54rem;letter-spacing:.24em;bottom:3vh}
+
+  /* куклы — по две в ряд */
+  .rack{gap:2.2rem 1.2rem;margin-bottom:3.5rem;padding-top:1rem}
+  .doll{width:calc(50% - 1rem);max-width:150px;transform-origin:50% -120px}
+  .doll svg{width:100%;height:auto}
+  .doll .nm{margin-top:.8rem;font-size:.58rem;letter-spacing:.2em}
+  .doll .rl{font-size:.85rem}
+
+  /* ссора */
+  .quarrel{margin:3.5rem 0;gap:.25rem}
+  .q{line-height:.98}
+
+  .air{margin:4.5rem auto}
+  .air .g{letter-spacing:.24em;font-size:.58rem;line-height:1.9}
+  .tears{height:24vh;margin:2.5rem 0}
+
+  /* билет */
+  .ticket-wrap{margin:3rem 0 4rem;perspective:900px}
+  .ticket{width:88vw;padding:1.5rem 1.6rem;transform:rotateY(-8deg) rotateZ(-1.5deg)}
+  .ticket .t2{font-size:1.7rem}
+  .ticket .t3{font-size:.52rem;letter-spacing:.1em}
+
+  .refusals{margin:3rem 0 4rem}
+  .ref{grid-template-columns:2.2rem 1fr;gap:1rem;padding:1.1rem 0}
+  .ref .x{font-size:1.1rem}
+
+  #light{padding:13vh 7vw;box-shadow:0 0 80px 30px var(--paper)}
+
+  /* солнце */
+  .disc{width:72vw;top:3vh;right:-22vw}
+  .beam{margin:4rem 0;padding:3rem 1rem}
+  .beam-t{font-size:clamp(1.5rem,7vw,2.4rem)}
+
+  /* ричард */
+  .mirror{grid-template-columns:1fr;margin:3.5rem auto}
+  .mirror>div{padding:1.8rem 1.4rem;font-size:.68rem;line-height:2}
+  .mirror .said-of{border-right:none;border-bottom:1px solid rgba(143,45,32,.34)}
+  .mirror .became{text-align:left}
+  .vow{margin:4rem 0;padding:3.4rem 1rem}
+  .upward{margin:2.6rem 0;letter-spacing:.22em;font-size:.6rem}
+
+  /* голос */
+  .voice{padding:1.5rem 1.3rem;margin:2rem 0 3rem}
+  .transcript{max-height:19rem;padding-right:.8rem;font-size:.98rem}
+
+  #end{height:80svh}
+  #end .colophon{margin-top:2.6rem;font-size:.55rem;letter-spacing:.2em;line-height:2.4}
+}
+
+@media(max-width:400px){
+  .doll{width:calc(50% - .6rem)}
+  .rack{gap:1.8rem .8rem}
+  .act{padding:11vh 6vw 8vh}
+}
+
+/* телефон в альбомной — занавес не должен резать афишу */
+@media(max-height:520px) and (orientation:landscape){
+  #curtain{height:auto;min-height:100svh;padding:14vh 0 8vh}
+  .afisha h1{font-size:clamp(2.4rem,8vw,4.6rem)}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition-duration:.01ms!important}
@@ -703,7 +782,9 @@ addEventListener('mouseover',e=>{
   const t=e.target.closest('a,button,.doll,.ticket,audio');
   hook.classList.toggle('hot',!!t);
 });
+const touch=matchMedia('(max-width:760px)').matches||matchMedia('(hover:none)').matches;
 (function tick(){
+  if(touch)return;
   cx+=(tx-cx)*.16; cy+=(ty-cy)*.16;
   const bw=26, bx=cx+(tx-cx)*1.4, by=Math.max(0,cy-140);
   bar.setAttribute('x1',bx-bw);bar.setAttribute('y1',by);
