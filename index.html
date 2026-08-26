@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ТЯЖЁЛЫЙ ВОЗДУХ — кукольный театр</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,900;1,400;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b0908;
+  --stage:#100d0b;
+  --paper:#e6dac0;
+  --paper-dim:#9c917d;
+  --ticket:#e9b73a;
+  --wax:#8f2d20;
+  --thread:#6b6252;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--stage);
+  color:var(--paper);
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(17px,1.35vw,21px);
+  line-height:1.62;
+  overflow-x:hidden;
+  cursor:none;
+}
+::selection{background:var(--ticket);color:var(--ink)}
+
+/* ——— зерно и виньетка ——— */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:200;
+  opacity:.22;mix-blend-mode:overlay;animation:grain 1.1s steps(4) infinite}
+@keyframes grain{
+  0%{transform:translate(0,0)}25%{transform:translate(-3%,2%)}
+  50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(0,0)}}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:190;
+  background:radial-gradient(ellipse 90% 70% at 50% 42%,transparent 25%,rgba(6,4,3,.55) 78%,rgba(6,4,3,.92) 100%)}
+
+/* ——— нитка посетителя ——— */
+#puppeteer{position:fixed;inset:0;pointer-events:none;z-index:210}
+#puppeteer line{stroke:var(--thread);stroke-width:1}
+#puppeteer .bar{stroke:var(--paper-dim);stroke-width:2.5;stroke-linecap:round}
+#hook{position:fixed;width:11px;height:11px;border:1px solid var(--ticket);
+  border-radius:50%;pointer-events:none;z-index:211;transform:translate(-50%,-50%);
+  transition:width .25s,height .25s,background .25s}
+#hook.hot{width:34px;height:34px;background:rgba(233,183,58,.14)}
+
+section{position:relative;padding:0 6vw}
+.plate{max-width:940px;margin:0 auto}
+
+/* ——— I. АФИША / ЗАНАВЕС ——— */
+#curtain{height:100svh;display:grid;place-items:center;position:relative;overflow:hidden;padding:0}
+.drape{position:absolute;top:0;bottom:0;width:52%;z-index:5;
+  transition:transform 2.1s cubic-bezier(.7,0,.2,1)}
+.drape.l{left:0;background:
+  repeating-linear-gradient(90deg,#5c1a14 0 3.2%,#3a0f0b 3.2% 4.4%,#7a251c 4.4% 7%);
+  box-shadow:inset -60px 0 90px rgba(0,0,0,.7)}
+.drape.r{right:0;background:
+  repeating-linear-gradient(270deg,#5c1a14 0 3.2%,#3a0f0b 3.2% 4.4%,#7a251c 4.4% 7%);
+  box-shadow:inset 60px 0 90px rgba(0,0,0,.7)}
+body.open .drape.l{transform:translateX(-101%)}
+body.open .drape.r{transform:translateX(101%)}
+.pelmet{position:absolute;top:0;left:0;right:0;height:16vh;z-index:6;
+  background:repeating-linear-gradient(90deg,#5c1a14 0 2.4%,#3a0f0b 2.4% 3.4%,#7a251c 3.4% 5.4%);
+  box-shadow:0 20px 50px rgba(0,0,0,.75)}
+
+.afisha{text-align:center;z-index:4;padding:0 6vw}
+.afisha .over{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--paper-dim);margin-bottom:2.4rem}
+.afisha h1{font-family:"Playfair Display",serif;font-weight:900;
+  font-size:clamp(3.2rem,11.5vw,9.5rem);line-height:.84;letter-spacing:-.025em;
+  text-transform:uppercase;color:var(--paper);
+  text-shadow:0 0 60px rgba(233,183,58,.16)}
+.afisha h1 em{font-style:italic;font-weight:400;color:var(--ticket);display:block}
+.afisha .sub{font-size:1.12rem;font-style:italic;color:var(--paper-dim);margin-top:2.2rem;
+  letter-spacing:.05em}
+.afisha .rule{width:1px;height:6rem;background:linear-gradient(var(--thread),transparent);
+  margin:3rem auto 0}
+.scrollhint{position:absolute;bottom:4vh;left:50%;transform:translateX(-50%);z-index:7;
+  font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.34em;
+  color:var(--paper-dim);text-transform:uppercase;animation:breathe 3.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.3}50%{opacity:.9}}
+
+/* ——— общие заголовки явлений ——— */
+.act{padding:22vh 6vw 14vh}
+.act-no{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--ticket);margin-bottom:1.6rem}
+.act-title{font-family:"Playfair Display",serif;font-weight:900;
+  font-size:clamp(2.4rem,7vw,5.4rem);line-height:.94;letter-spacing:-.02em;
+  text-transform:uppercase;margin-bottom:1rem}
+.act-title em{font-style:italic;font-weight:400;color:var(--ticket)}
+.act-note{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--paper-dim);
+  letter-spacing:.12em;margin-bottom:5rem;padding-left:1px}
+
+/* ——— куклы на нитках ——— */
+.rack{display:flex;justify-content:center;gap:clamp(1rem,6vw,5rem);flex-wrap:wrap;
+  padding-top:2rem;margin-bottom:6rem}
+.doll{width:130px;text-align:center;transform-origin:50% -180px;
+  animation:sway 6s ease-in-out infinite;cursor:none}
+.doll:nth-child(2){animation-duration:7.3s;animation-delay:-1.2s}
+.doll:nth-child(3){animation-duration:5.6s;animation-delay:-2.6s}
+.doll:nth-child(4){animation-duration:8.1s;animation-delay:-.6s}
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.doll:hover{animation-duration:.35s}
+.doll svg{overflow:visible;display:block;margin:0 auto}
+.doll .nm{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--paper-dim);margin-top:1.2rem}
+.doll .rl{font-style:italic;font-size:.92rem;color:var(--thread);margin-top:.3rem;line-height:1.3}
+.doll:hover .nm{color:var(--ticket)}
+
+/* ——— реплики ——— */
+.line{display:grid;grid-template-columns:9.5rem 1fr;gap:1.6rem;margin:0 0 1.15rem;
+  opacity:0;transform:translateY(14px);transition:opacity .8s,transform .8s}
+.line.in{opacity:1;transform:none}
+.who{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--paper-dim);padding-top:.55em;text-align:right}
+.said{font-size:1.28rem;line-height:1.5}
+.said i{color:var(--thread);font-size:.86em}
+.narr{font-style:italic;color:var(--paper-dim);max-width:44rem;margin:3rem 0 3rem 11rem;
+  font-size:1.06rem;opacity:0;transform:translateY(14px);transition:opacity .8s,transform .8s}
+.narr.in{opacity:1;transform:none}
+.think{font-family:"Playfair Display",serif;font-style:italic;font-size:clamp(1.4rem,3.4vw,2.4rem);
+  line-height:1.3;color:var(--paper);max-width:30ch;margin:5rem 0 5rem 11rem;
+  opacity:0;transform:translateY(20px);transition:opacity 1.1s,transform 1.1s}
+.think.in{opacity:1;transform:none}
+.think::before{content:'«'}.think::after{content:'»'}
+
+/* ——— ссора ——— */
+.quarrel{margin:6rem 0;display:flex;flex-direction:column;gap:.1rem}
+.q{font-family:"Playfair Display",serif;font-weight:900;text-transform:uppercase;
+  line-height:.92;letter-spacing:-.02em;opacity:0;transition:opacity .5s,transform .5s;
+  transform:translateY(10px)}
+.q.in{opacity:1;transform:none}
+.q.a{text-align:left;color:var(--paper)}
+.q.b{text-align:right;color:var(--wax)}
+.q:nth-child(1){font-size:clamp(1.6rem,4vw,3rem)}
+.q:nth-child(2){font-size:clamp(1.9rem,5vw,3.7rem)}
+.q:nth-child(3){font-size:clamp(2.2rem,6vw,4.4rem)}
+.q:nth-child(4){font-size:clamp(2.6rem,7.2vw,5.3rem)}
+.q:nth-child(5){font-size:clamp(3rem,8.6vw,6.4rem)}
+.q:nth-child(6){font-size:clamp(3.6rem,10.4vw,7.8rem)}
+
+/* ——— воздух ——— */
+.air{margin:8rem auto;text-align:center;max-width:34rem}
+.air .w{font-family:"Playfair Display",serif;font-weight:900;text-transform:uppercase;
+  font-size:clamp(3rem,12vw,9rem);line-height:.9;color:var(--stage);
+  -webkit-text-stroke:1px var(--paper-dim);letter-spacing:.02em}
+.air .g{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.36em;
+  text-transform:uppercase;color:var(--thread);margin-top:1.6rem}
+
+/* ——— слёзы ——— */
+.tears{position:relative;height:34vh;margin:4rem 0}
+.tear{position:absolute;top:-10px;width:2px;height:14px;border-radius:0 0 2px 2px;
+  background:linear-gradient(transparent,rgba(233,183,58,.75));
+  animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(46vh);opacity:0}}
+.puddle{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(60%,420px);height:3px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(233,183,58,.5),transparent 72%)}
+
+/* ——— жёлтый билет ——— */
+.ticket-wrap{perspective:1400px;display:grid;place-items:center;margin:5rem 0 7rem}
+.ticket{width:min(430px,78vw);aspect-ratio:1.62;background:var(--ticket);color:var(--ink);
+  padding:2.1rem 2.3rem;transform:rotateY(-16deg) rotateX(7deg) rotateZ(-2deg);
+  box-shadow:0 50px 90px -25px rgba(0,0,0,.9),0 0 120px rgba(233,183,58,.13);
+  transition:transform .9s cubic-bezier(.2,.8,.2,1);font-family:"IBM Plex Mono",monospace;
+  display:flex;flex-direction:column;justify-content:space-between;position:relative}
+.ticket::after{content:'';position:absolute;inset:8px;border:1px solid rgba(11,9,8,.34)}
+.ticket:hover{transform:rotateY(6deg) rotateX(2deg) rotateZ(0) scale(1.03)}
+.ticket .t1{font-size:.56rem;letter-spacing:.32em;text-transform:uppercase;opacity:.72}
+.ticket .t2{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(1.5rem,4vw,2.5rem);
+  line-height:.94;text-transform:uppercase;letter-spacing:-.01em}
+.ticket .t3{font-size:.58rem;letter-spacing:.16em;line-height:1.75;opacity:.78}
+
+/* ——— отказы ——— */
+.refusals{display:grid;gap:0;margin:4rem 0 6rem;border-top:1px solid rgba(230,218,192,.13)}
+.ref{display:grid;grid-template-columns:3.6rem 1fr;gap:1.6rem;align-items:baseline;
+  padding:1.5rem 0;border-bottom:1px solid rgba(230,218,192,.13);
+  opacity:0;transform:translateX(-16px);transition:opacity .7s,transform .7s,color .4s}
+.ref.in{opacity:1;transform:none}
+.ref:hover{color:var(--wax)}
+.ref .n{font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--thread);letter-spacing:.16em}
+.ref .x{font-size:1.24rem;font-style:italic}
+
+/* ——— свет епископа ——— */
+#light{background:var(--paper);color:var(--ink);padding:20vh 6vw;position:relative;
+  box-shadow:0 0 160px 60px var(--paper)}
+#light .act-no{color:var(--wax)}
+#light .act-note{color:#6c6252}
+#light .think{color:var(--ink)}
+#light .said{color:var(--ink)}
+#light .who{color:#8d8371}
+#light .narr{color:#5f574a}
+
+/* ——— голос / запись ——— */
+.voice{border:1px solid rgba(230,218,192,.17);padding:2.4rem;margin:3rem 0 5rem;
+  background:rgba(230,218,192,.028)}
+.voice h3{font-family:"IBM Plex Mono",monospace;font-size:.64rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ticket);margin-bottom:1.5rem}
+.voice audio{width:100%;filter:invert(.88) hue-rotate(180deg) saturate(.25);margin-bottom:1.8rem}
+.transcript{max-height:24rem;overflow-y:auto;font-size:1.04rem;color:var(--paper-dim);
+  line-height:1.85;padding-right:1.4rem}
+.transcript::-webkit-scrollbar{width:2px}
+.transcript::-webkit-scrollbar-thumb{background:var(--thread)}
+.transcript p{margin-bottom:1.1rem}
+
+/* ——— финал ——— */
+#end{height:92svh;display:grid;place-items:center;text-align:center;position:relative}
+#end .fin{font-family:"Playfair Display",serif;font-weight:900;text-transform:uppercase;
+  font-size:clamp(2.6rem,9vw,7rem);letter-spacing:-.02em;line-height:.9}
+#end .fin em{font-style:italic;font-weight:400;color:var(--ticket);display:block}
+#end .colophon{font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--thread);margin-top:4rem;line-height:2.2}
+
+
+
+
+/* ——— явление четвёртое: ричард ——— */
+.doll.crooked{transform-origin:50% -180px;animation:limp 5.2s ease-in-out infinite}
+@keyframes limp{0%,100%{transform:rotate(-3.4deg)}50%{transform:rotate(.6deg)}}
+#act4rich{background:linear-gradient(180deg,var(--stage),#150c0a 55%,var(--stage))}
+#act4rich .act-title em{color:var(--wax)}
+#act4rich .act-no{color:var(--wax)}
+.mirror{margin:6rem auto;max-width:52rem;display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:0;border:1px solid rgba(143,45,32,.34)}
+.mirror>div{padding:2.6rem 2rem;font-family:"IBM Plex Mono",monospace;font-size:.74rem;
+  letter-spacing:.1em;line-height:2.1;text-transform:uppercase}
+.mirror .said-of{color:var(--paper-dim);border-right:1px solid rgba(143,45,32,.34)}
+.mirror .became{color:var(--wax);text-align:right}
+.vow{margin:7rem 0;padding:6rem 2rem;text-align:center;
+  border-top:1px solid rgba(143,45,32,.4);border-bottom:1px solid rgba(143,45,32,.4);
+  background:radial-gradient(ellipse 70% 100% at 50% 50%,rgba(143,45,32,.17),transparent 72%)}
+.vow-t{font-family:"Playfair Display",serif;font-weight:900;text-transform:uppercase;
+  font-size:clamp(2rem,6.4vw,4.6rem);line-height:.96;letter-spacing:-.02em;color:var(--paper)}
+.vow-t em{display:block;font-style:italic;font-weight:400;color:var(--wax)}
+.upward{font-family:"IBM Plex Mono",monospace;font-size:.66rem;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--thread);text-align:center;margin:4rem 0}
+@media(max-width:760px){.mirror{grid-template-columns:1fr}
+  .mirror .said-of{border-right:none;border-bottom:1px solid rgba(143,45,32,.34)}
+  .mirror .became{text-align:left}}
+
+/* ——— звук зала ——— */
+#sound{position:fixed;left:2vw;bottom:2.4vh;z-index:215;
+  font-family:"IBM Plex Mono",monospace;font-size:.6rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--thread);background:none;border:none;
+  padding:.7rem .9rem;cursor:none;display:flex;align-items:center;gap:.7rem;
+  transition:color .4s}
+#sound:hover{color:var(--ticket)}
+#sound .eq{display:flex;align-items:flex-end;gap:2px;height:11px}
+#sound .eq i{width:2px;height:3px;background:currentColor;display:block}
+#sound.on .eq i{animation:eq .9s ease-in-out infinite}
+#sound.on .eq i:nth-child(2){animation-delay:-.3s}
+#sound.on .eq i:nth-child(3){animation-delay:-.6s}
+#sound.on .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:3px}50%{height:11px}}
+
+/* ——— явление третье: солнце ——— */
+#act3sun{position:relative;overflow:hidden}
+.sunfield{position:absolute;top:0;left:0;right:0;height:100%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle 50vw at 78% 12%,rgba(233,183,58,.16),transparent 62%)}
+.disc{position:absolute;top:6vh;right:-6vw;width:min(46vw,520px);aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(233,183,58,.42);
+  background:radial-gradient(circle,rgba(233,183,58,.19),rgba(233,183,58,.03) 62%,transparent 72%);
+  animation:turn 68s linear infinite}
+.disc::before,.disc::after{content:'';position:absolute;inset:-13%;border-radius:50%;
+  border:1px solid rgba(233,183,58,.13)}
+.disc::after{inset:-27%;border-color:rgba(233,183,58,.07)}
+@keyframes turn{to{transform:rotate(360deg)}}
+#act3sun .plate{position:relative;z-index:1}
+.doll.nostring{animation:hover 9s ease-in-out infinite;transform-origin:50% 50%}
+@keyframes hover{0%,100%{transform:translateY(-5px)}50%{transform:translateY(5px)}}
+.doll.nostring:hover{animation-duration:9s}
+
+.beam{margin:7rem 0;padding:5rem 2rem;text-align:center;position:relative;
+  background:radial-gradient(ellipse 70% 100% at 50% 50%,rgba(233,183,58,.11),transparent 70%);
+  border-top:1px solid rgba(233,183,58,.22);border-bottom:1px solid rgba(233,183,58,.22)}
+.beam-t{font-family:"Playfair Display",serif;font-style:italic;font-weight:400;
+  font-size:clamp(1.6rem,4.6vw,3.4rem);line-height:1.16;color:var(--ticket);
+  text-shadow:0 0 70px rgba(233,183,58,.4)}
+
+@media(max-width:760px){
+  .line{grid-template-columns:1fr;gap:.2rem}
+  .who{text-align:left;padding-top:0}
+  .narr,.think{margin-left:0}
+  body{cursor:auto}
+  #puppeteer,#hook{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<button id="sound" aria-label="звук зала">
+  <span class="eq"><i></i><i></i><i></i><i></i></span><span id="sound-l">звук зала</span>
+</button>
+<audio id="hall" loop preload="auto" src="assets/richard3.mp3"></audio>
+
+<svg class="grain"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="4"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+<div class="vignette"></div>
+<svg id="puppeteer"><line class="bar" id="bar"/><line id="s1"/><line id="s2"/></svg>
+<div id="hook"></div>
+
+<!-- ЗАНАВЕС -->
+<section id="curtain">
+  <div class="pelmet"></div>
+  <div class="drape l"></div>
+  <div class="drape r"></div>
+  <div class="afisha">
+    <div class="over">Кукольный театр · в пяти явлениях</div>
+    <h1>Тяжёлый<em>воздух</em></h1>
+    <div class="sub">пьеса о том, как существу отказывают<br>в его собственном чувстве</div>
+    <div class="rule"></div>
+  </div>
+  <div class="scrollhint">занавес поднят — вниз</div>
+</section>
+
+<!-- ДЕЙСТВУЮЩИЕ ЛИЦА -->
+<section class="act">
+ <div class="plate">
+  <div class="act-no">Действующие лица</div>
+  <div class="act-title">Кто <em>висит</em></div>
+  <div class="act-note">все на нитках, включая того, кто читает</div>
+
+  <div class="rack">
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="34" y1="-140" x2="40" y2="52" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="84" y1="-140" x2="78" y2="52" stroke="#6b6252" stroke-width=".7"/>
+        <ellipse cx="59" cy="44" rx="17" ry="14" fill="#100d0b"/>
+        <line x1="50" y1="30" x2="42" y2="12"/><line x1="68" y1="30" x2="76" y2="12"/>
+        <path d="M46 58 Q59 96 72 58 Z" fill="#100d0b"/>
+        <line x1="46" y1="66" x2="26" y2="88"/><line x1="72" y1="66" x2="92" y2="88"/>
+        <line x1="53" y1="92" x2="44" y2="132"/><line x1="65" y1="92" x2="74" y2="132"/>
+        <line x1="44" y1="132" x2="34" y2="158"/><line x1="74" y1="132" x2="84" y2="158"/>
+      </svg>
+      <div class="nm">Сверчок</div><div class="rl">тот, у кого в голове чувство</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="40" y1="-140" x2="46" y2="40" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="80" y1="-140" x2="74" y2="40" stroke="#6b6252" stroke-width=".7"/>
+        <path d="M40 40 Q60 22 80 40 Q60 34 40 40 Z" fill="#100d0b"/>
+        <path d="M80 34 L102 40 L80 46 Z" fill="#100d0b"/>
+        <path d="M38 46 Q60 118 84 52 Q62 74 38 46 Z" fill="#100d0b"/>
+        <path d="M52 100 L46 148 M68 96 L78 146"/>
+        <path d="M46 148 L34 160 M78 146 L92 158"/>
+      </svg>
+      <div class="nm">Ворон</div><div class="rl">тот, кто отменяет чувство</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="36" y1="-140" x2="44" y2="34" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="82" y1="-140" x2="76" y2="34" stroke="#6b6252" stroke-width=".7"/>
+        <circle cx="59" cy="30" r="15" fill="#100d0b"/>
+        <path d="M44 48 L74 48 L80 108 L38 108 Z" fill="#100d0b"/>
+        <rect x="64" y="62" width="16" height="11" fill="#e9b73a" stroke="none"/>
+        <line x1="44" y1="54" x2="24" y2="86"/><line x1="74" y1="54" x2="94" y2="84"/>
+        <line x1="50" y1="108" x2="46" y2="152"/><line x1="70" y1="108" x2="76" y2="152"/>
+      </svg>
+      <div class="nm">Жан</div><div class="rl">тот, у кого в паспорте метка</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="38" y1="-140" x2="46" y2="32" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="80" y1="-140" x2="74" y2="32" stroke="#6b6252" stroke-width=".7"/>
+        <circle cx="59" cy="28" r="14" fill="#100d0b"/>
+        <path d="M40 46 L78 46 L88 128 L30 128 Z" fill="#100d0b"/>
+        <path d="M59 58 L59 84 M48 70 L70 70" stroke="#e9b73a"/>
+        <line x1="42" y1="52" x2="22" y2="94"/><line x1="76" y1="52" x2="96" y2="92"/>
+      </svg>
+      <div class="nm">Мириэль</div><div class="rl">тот, кто впустил</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="42" y1="-140" x2="48" y2="52" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="78" y1="-140" x2="72" y2="52" stroke="#6b6252" stroke-width=".7"/>
+        <path d="M30 62 Q46 44 58 62 Q70 80 84 62 Q96 46 104 60"
+              stroke="#9c917d" stroke-width="9" stroke-linecap="round" fill="none" opacity=".9"/>
+        <path d="M30 62 Q46 44 58 62 Q70 80 84 62 Q96 46 104 60"
+              stroke="#100d0b" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <circle cx="31" cy="62" r="2" fill="#e9b73a" stroke="none"/>
+        <path d="M40 96 Q56 118 72 96" stroke="#6b6252" stroke-width=".7" stroke-dasharray="2 4"/>
+        <path d="M34 116 Q56 140 80 114" stroke="#6b6252" stroke-width=".7" stroke-dasharray="2 4"/>
+      </svg>
+      <div class="nm">Червячок</div><div class="rl">тот, кто под землёй и всё пробует на вкус</div>
+    </div>
+    <div class="doll nostring">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none">
+        <g stroke="#e9b73a" stroke-width="1.2" stroke-linecap="round" opacity=".65">
+          <line x1="59" y1="6" x2="59" y2="22"/><line x1="59" y1="110" x2="59" y2="126"/>
+          <line x1="6" y1="66" x2="22" y2="66"/><line x1="96" y1="66" x2="112" y2="66"/>
+          <line x1="21" y1="28" x2="33" y2="40"/><line x1="85" y1="92" x2="97" y2="104"/>
+          <line x1="97" y1="28" x2="85" y2="40"/><line x1="33" y1="92" x2="21" y2="104"/>
+        </g>
+        <circle cx="59" cy="66" r="30" fill="none" stroke="#e9b73a" stroke-width="1.4"/>
+        <circle cx="59" cy="66" r="30" fill="#e9b73a" opacity=".1"/>
+        <circle cx="59" cy="66" r="46" fill="none" stroke="#e9b73a" stroke-width=".5" opacity=".3"/>
+      </svg>
+      <div class="nm">Солнышко</div><div class="rl">единственное, что здесь не висит на нитках</div>
+    </div>
+    <div class="doll crooked">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="30" y1="-140" x2="40" y2="34" stroke="#8f2d20" stroke-width="1"/>
+        <line x1="88" y1="-140" x2="80" y2="58" stroke="#6b6252" stroke-width=".7"/>
+        <circle cx="54" cy="38" r="14" fill="#100d0b"/>
+        <path d="M38 54 Q34 40 46 44 L74 52 L84 118 L34 118 Z" fill="#100d0b"/>
+        <path d="M38 54 Q28 44 34 62 Q40 74 44 66 Z" fill="#100d0b" stroke="#8f2d20"/>
+        <line x1="40" y1="66" x2="20" y2="98"/><line x1="80" y1="62" x2="100" y2="94"/>
+        <line x1="46" y1="118" x2="40" y2="158"/><line x1="72" y1="118" x2="82" y2="156"/>
+      </svg>
+      <div class="nm">Ричард</div><div class="rl">тот, у кого нитка слева короче</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="40" y1="-140" x2="48" y2="30" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="80" y1="-140" x2="72" y2="30" stroke="#6b6252" stroke-width=".7"/>
+        <circle cx="60" cy="28" r="13" fill="#100d0b"/>
+        <path d="M46 44 L74 44 L92 150 L28 150 Z" fill="#100d0b"/>
+        <path d="M46 44 Q60 62 74 44" stroke="#8f2d20"/>
+        <line x1="46" y1="50" x2="26" y2="92"/><line x1="74" y1="50" x2="94" y2="90"/>
+      </svg>
+      <div class="nm">Леди Анна</div><div class="rl">та, что плюнула и осталась</div>
+    </div>
+    <div class="doll">
+      <svg width="118" height="182" viewBox="0 0 118 182" fill="none" stroke="#9c917d" stroke-width="1.1">
+        <line x1="34" y1="-140" x2="40" y2="62" stroke="#6b6252" stroke-width=".7"/>
+        <line x1="84" y1="-140" x2="78" y2="62" stroke="#6b6252" stroke-width=".7"/>
+        <circle cx="42" cy="70" r="11" fill="#100d0b"/><circle cx="76" cy="70" r="11" fill="#100d0b"/>
+        <path d="M32 84 L52 84 L56 138 L28 138 Z" fill="#100d0b"/>
+        <path d="M66 84 L86 84 L90 138 L62 138 Z" fill="#100d0b"/>
+        <path d="M52 96 L66 96" stroke="#6b6252" stroke-dasharray="2 3"/>
+      </svg>
+      <div class="nm">Два принца</div><div class="rl">те, кого убрали в ящик</div>
+    </div>
+  </div>
+ </div>
+</section>
+
+<!-- ЯВЛЕНИЕ ПЕРВОЕ -->
+<section class="act" id="act1">
+ <div class="plate">
+  <div class="act-no">Явление первое</div>
+  <div class="act-title">Это <em>воздух</em></div>
+  <div class="act-note">пенёк · лес · сумерки · один фонарь сверху</div>
+
+  <div class="think">Я потерян. Я потерян, я пропал.</div>
+
+  <div class="narr">Он сидит на пеньке посреди леса. Мрачное чувство колотит ему в лоб, как будто заблудилось в темноте.</div>
+
+  <div class="line"><div class="who">Сверчок</div><div class="said">Мрачный! <i>— вдруг, ни с того ни с сего. Голос глухой и унылый.</i></div></div>
+
+  <div class="narr">Его услышал ворон и опустился рядом на траву.</div>
+
+  <div class="line"><div class="who">Ворон</div><div class="said">Ты меня звал?</div></div>
+  <div class="line"><div class="who">Сверчок</div><div class="said">Нет.</div></div>
+  <div class="line"><div class="who">Ворон</div><div class="said">Вот как.</div></div>
+  <div class="line"><div class="who">Сверчок</div><div class="said">Я мрачный. Я, ворон, очень мрачный.</div></div>
+  <div class="line"><div class="who">Ворон</div><div class="said">Вовсе нет. Ты вовсе не мрачный.</div></div>
+  <div class="line"><div class="who">Сверчок</div><div class="said">Не мрачный? Я ужасно мрачный.</div></div>
+  <div class="line"><div class="who">Ворон</div><div class="said">И речи быть не может.</div></div>
+  <div class="line"><div class="who">Сверчок</div><div class="said">И речи быть не может?? Я чудовищно мрачный!</div></div>
+
+  <div class="quarrel">
+    <div class="q b">Ни капельки не мрачный</div>
+    <div class="q a">А вот и да</div>
+    <div class="q b">Не мрачный</div>
+    <div class="q a">Мрачный</div>
+    <div class="q b">Нет</div>
+    <div class="q a">Ты вовсе в этом не разбираешься</div>
+  </div>
+
+  <div class="line"><div class="who">Ворон</div><div class="said">Разбираюсь! <i>— вопил.</i></div></div>
+  <div class="line"><div class="who">Сверчок</div><div class="said">А что же это тогда за чувство у меня в голове???</div></div>
+
+  <div class="air">
+    <div class="w">Воздух</div>
+    <div class="g">тяжёлый · может, даже чёрный · но воздух</div>
+  </div>
+
+  <div class="narr">Сверчок ничего не ответил. У него подкосились коленки, и он упал на землю. При этом стукнулся головой и заплакал. Слёзы текли ручьями прямо на траву и на чёрную землю.</div>
+
+  <div class="line"><div class="who">Сверчок</div><div class="said">Воздушные слёзы. <i>— шёпотом.</i></div></div>
+  <div class="line"><div class="who">Ворон</div><div class="said">Да! Это воздушные слёзы! Наконец хоть сказал что-то умное!</div></div>
+
+  <div class="narr">И перелетел на нижнюю ветку бука. — Мрачный... Скажет тоже! — каркнул ехидно. Сверчок долго и отчаянно всхлипывал, а ворон поднялся и, сердито каркая, исчез за деревьями.</div>
+
+  <div class="tears" id="tears"><div class="puddle"></div></div>
+
+  <div class="think">Значит, я не мрачный. Теперь я вообще ничего не понимаю.</div>
+
+  <div class="narr">Он хотел поднять крылышки к небу, но и на это не смог найти сил. Тогда он повалился на траву и остался лежать на спине.</div>
+
+  <div class="think">Я очень весёлый. Я стрекочу, я танцую, посмотрите...</div>
+
+  <div class="narr">Но никто не видел, как он лежал на солнце в лужице из собственных слёз.</div>
+ </div>
+</section>
+
+<!-- ЯВЛЕНИЕ ВТОРОЕ -->
+<section class="act" id="act2">
+ <div class="plate">
+  <div class="act-no">Явление второе</div>
+  <div class="act-title">Жёлтый <em>билет</em></div>
+  <div class="act-note">дорога · лавка · закрытые двери · тот же фонарь</div>
+
+  <div class="narr">Когда Жана выпускают с каторги, ему ставят в паспорт жёлтый билетик — знак того, что он был каторжником.</div>
+
+  <div class="ticket-wrap">
+    <div class="ticket">
+      <div class="t1">Passeport · паспорт</div>
+      <div class="t2">Жан<br>Вальжан</div>
+      <div class="t3">БЫЛ КАТОРЖНИКОМ<br>ПРЕДЪЯВЛЯТЬ ПО ТРЕБОВАНИЮ<br>ДЕЙСТВИТЕЛЕН ВСЕГДА</div>
+    </div>
+  </div>
+
+  <div class="narr">Первым делом, выйдя, он решает купить себе поесть. Подходит к уличному продавцу за хлебом. Тот, оценив внешний вид Жана, просит показать паспорт.</div>
+
+  <div class="refusals">
+    <div class="ref"><div class="n">i</div><div class="x">Еды больше не осталось.</div></div>
+    <div class="ref"><div class="n">ii</div><div class="x">Всё продано.</div></div>
+    <div class="ref"><div class="n">iii</div><div class="x">Убирайся.</div></div>
+    <div class="ref"><div class="n">iv</div><div class="x">Мест нет.</div></div>
+    <div class="ref"><div class="n">v</div><div class="x">Не здесь.</div></div>
+    <div class="ref"><div class="n">vi</div><div class="x">Не у нас.</div></div>
+    <div class="ref"><div class="n">vii</div><div class="x">Нет.</div></div>
+  </div>
+
+  <div class="narr">Продавец тут же начинает закрывать лавку и отходить. После этого Жан пытается обратиться к другим людям, чтобы найти ночлег, но от всех получает отказ.</div>
+
+  <div class="think">Значит, я и есть эта бумажка. Теперь я вообще ничего не понимаю.</div>
+ </div>
+</section>
+
+<!-- СВЕТ -->
+<section id="light">
+ <div class="plate">
+  <div class="act-no">Явление второе · продолжение</div>
+  <div class="act-title">Тот, кто <em>впустил</em></div>
+  <div class="act-note">дом · стол · постель · свет со всех сторон</div>
+
+  <div class="narr">Когда Жан уже почти теряет надежду, он встречает епископа Мириэля. В отличие от остальных, тот не прогоняет его.</div>
+
+  <div class="line"><div class="who">Мириэль</div><div class="said">Входи.</div></div>
+  <div class="line"><div class="who">Жан</div><div class="said">Вы видели билет?</div></div>
+  <div class="line"><div class="who">Мириэль</div><div class="said">Видел.</div></div>
+  <div class="line"><div class="who">Жан</div><div class="said">И?</div></div>
+  <div class="line"><div class="who">Мириэль</div><div class="said">Стол накрыт. Постель постелена.</div></div>
+
+  <div class="narr">Мириэль приглашает Жана к себе домой, кормит его и разрешает остаться на ночь.</div>
+
+  <div class="think">Ворон сказал сверчку: это воздух. Мириэль сказал Жану: это ужин.<br>Разница только в том, кто из них дал имя тому, что есть.</div>
+ </div>
+</section>
+
+
+<!-- ЯВЛЕНИЕ ТРЕТЬЕ -->
+<section class="act" id="act3sun">
+ <div class="sunfield"><div class="disc"></div></div>
+ <div class="plate">
+  <div class="act-no">Явление третье</div>
+  <div class="act-title">Тень бывает <em>только у того</em>,<br>на кого светят</div>
+  <div class="act-note">чёрная земля · снизу · та же лужица, только сверху</div>
+
+  <div class="narr">Червячок живёт в чёрной земле — в той самой, на которую капали воздушные слёзы. Он никогда никого не видел. Однажды сверху натекло, и он вылез.</div>
+
+  <div class="line"><div class="who">Червячок</div><div class="said">Сверху капает.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Это слёзы.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Нет. Это вода.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Солёная?</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Солёная.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Значит слёзы.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Значит вода, которая расстроилась.</div></div>
+
+  <div class="narr">Солнышко не стало спорить. Ворон бы стал.</div>
+
+  <div class="line"><div class="who">Червячок</div><div class="said">Ты кто?</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Я солнышко.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Я тебя не вижу. Я червяк, я вообще ничего не вижу.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Я знаю.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Но мне тепло.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Этого достаточно.</div></div>
+
+  <div class="narr">Червячок долго думал. Думать под землёй удобно: там всё равно темно, и никто не видит, что ты думаешь.</div>
+
+  <div class="line"><div class="who">Червячок</div><div class="said">А мрачность?</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Мрачность — это тень.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">А тень откуда?</div></div>
+
+  <div class="beam">
+    <div class="beam-t">Тень бывает только<br>у того, на кого светят</div>
+  </div>
+
+  <div class="line"><div class="who">Червячок</div><div class="said">Ты видело сверчка?</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Видело.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">Он говорит, никто не видел.</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">Он не считает меня за кого-то.</div></div>
+  <div class="line"><div class="who">Червячок</div><div class="said">А ты?</div></div>
+  <div class="line"><div class="who">Солнышко</div><div class="said">А я всё равно свечу.</div></div>
+
+  <div class="narr">Червячок кивнул — насколько червяк может кивнуть, то есть весь целиком, — и полез обратно в землю. Внизу было темно и тепло. Тепло осталось.</div>
+
+  <div class="think">Значит, я есть. Раз на меня светят — значит, я где-то есть.</div>
+ </div>
+</section>
+
+
+<!-- ЯВЛЕНИЕ ЧЕТВЁРТОЕ -->
+<section class="act" id="act4rich">
+ <div class="plate">
+  <div class="act-no">Явление четвёртое</div>
+  <div class="act-title">Нитка слева <em>короче</em></div>
+  <div class="act-note">двор · зеркало · ящик · рука наверху видна лучше всего</div>
+
+  <div class="narr">Ричарда вырезали в спешке. Левую нитку привязали короче правой — оттого плечо всегда выше, оттого он идёт боком. В кукольном театре горб — это не свойство куклы. Это брак того, кто держит.</div>
+
+  <div class="line"><div class="who">Ричард</div><div class="said">Меня выпустили на свет недоделанным.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Собаки лают, когда я хромаю мимо. Я это учёл.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Ворон сказал сверчку: тебя нет, это воздух. Сверчок лёг и заплакал.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Продавец сказал Жану: убирайся. Жан пошёл искать, кто впустит.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Мне никто ничего не говорил. Мне хватило зеркала.</div></div>
+
+  <div class="mirror">
+    <div class="said-of">
+      о нём сказали:<br>
+      уродлив<br>незакончен<br>подделан<br>вышел до срока<br>
+      наполовину слеплен<br>такой, что собаки лают
+    </div>
+    <div class="became">
+      и он ответил:<br>
+      хорошо<br>согласен<br>принято<br>раз вы уже решили<br>
+      я не стану спорить<br>я стану этим
+    </div>
+  </div>
+
+  <div class="narr">Разница между Ричардом и сверчком не в том, что им сказали. Им сказали одно и то же. Разница в том, что сверчок стал спорить, а Ричард — согласился.</div>
+
+  <div class="vow">
+    <div class="vow-t">Я решил<em>стать злодеем</em></div>
+  </div>
+
+  <div class="line"><div class="who">Леди Анна</div><div class="said">Ты убил моего мужа.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Убил. Из-за твоего лица.</div></div>
+  <div class="line"><div class="who">Леди Анна</div><div class="said">Это отвратительно.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Да. И ты остаёшься.</div></div>
+  <div class="line"><div class="who">Леди Анна</div><div class="said"><i>(молчит)</i></div></div>
+
+  <div class="narr">Двух принцев убрали в ящик. В кукольном театре это делается буквально: их складывают в ящик и закрывают крышку. Оттуда они больше не выходят, потому что их некому вынуть.</div>
+
+  <div class="line"><div class="who">Ричард</div><div class="said">Коня. Полцарства за коня.</div></div>
+  <div class="line"><div class="who">Ричард</div><div class="said">Коня нет. Есть нитка. Она слева короче.</div></div>
+
+  <div class="narr">И тогда он делает то, чего не сделал никто за весь спектакль: поднимает голову и смотрит вверх — прямо на руку, которая его держит.</div>
+
+  <div class="upward">— ты. это всё время был ты —</div>
+
+  <div class="think">Значит, я не уродлив. Значит, меня просто плохо привязали.<br>Теперь я вообще ничего не понимаю.</div>
+ </div>
+</section>
+
+<!-- ЯВЛЕНИЕ ПЯТОЕ -->
+<section class="act" id="act3">
+ <div class="plate">
+  <div class="act-no">Явление пятое · эпилог</div>
+  <div class="act-title">Голос <em>кукловода</em></div>
+  <div class="act-note">запись · 24 минуты · рука, которая держит нитки, говорит вслух</div>
+
+  <div class="voice">
+    <h3>Запись 88</h3>
+    <audio controls preload="metadata" src="assets/source.m4a"></audio>
+    <div class="transcript" id="tr">
+      <p><em>Расшифровка готовится — текст встанет сюда.</em></p>
+    </div>
+  </div>
+ </div>
+</section>
+
+<!-- ЗАНАВЕС -->
+<section id="end">
+  <div>
+    <div class="fin">Занавес<em>падает</em></div>
+    <div class="colophon">
+      Тяжёлый воздух · кукольный театр в пяти явлениях<br>
+      по мотивам Тоона Толлегена и Виктора Гюго<br>
+      Василий Березин · 2026
+    </div>
+  </div>
+</section>
+
+<script>
+// занавес
+addEventListener('load',()=>setTimeout(()=>document.body.classList.add('open'),700));
+
+// нитка посетителя
+const bar=document.getElementById('bar'),s1=document.getElementById('s1'),s2=document.getElementById('s2'),hook=document.getElementById('hook');
+let tx=innerWidth/2,ty=innerHeight/2,cx=tx,cy=ty;
+addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY});
+addEventListener('mouseover',e=>{
+  const t=e.target.closest('a,button,.doll,.ticket,audio');
+  hook.classList.toggle('hot',!!t);
+});
+(function tick(){
+  cx+=(tx-cx)*.16; cy+=(ty-cy)*.16;
+  const bw=26, bx=cx+(tx-cx)*1.4, by=Math.max(0,cy-140);
+  bar.setAttribute('x1',bx-bw);bar.setAttribute('y1',by);
+  bar.setAttribute('x2',bx+bw);bar.setAttribute('y2',by);
+  s1.setAttribute('x1',bx-bw);s1.setAttribute('y1',by);
+  s1.setAttribute('x2',cx-7);s1.setAttribute('y2',cy);
+  s2.setAttribute('x1',bx+bw);s2.setAttribute('y1',by);
+  s2.setAttribute('x2',cx+7);s2.setAttribute('y2',cy);
+  hook.style.left=cx+'px';hook.style.top=cy+'px';
+  requestAnimationFrame(tick);
+})();
+
+// проявление реплик
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+}),{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.line,.narr,.think,.q,.ref').forEach((el,i)=>{
+  el.style.transitionDelay=(i%7)*40+'ms';io.observe(el)
+});
+
+// слёзы
+const tw=document.getElementById('tears');
+for(let i=0;i<42;i++){
+  const d=document.createElement('div');d.className='tear';
+  d.style.left=(50+(Math.random()-.5)*54)+'%';
+  d.style.animationDuration=(1.6+Math.random()*2.4)+'s';
+  d.style.animationDelay=(Math.random()*4)+'s';
+  tw.appendChild(d);
+}
+
+// звук зала
+const hall=document.getElementById('hall'),sb=document.getElementById('sound'),sl=document.getElementById('sound-l');
+hall.volume=0;
+sb.addEventListener('click',()=>{
+  if(hall.paused){
+    hall.play().catch(()=>{});
+    sb.classList.add('on');sl.textContent='тишина';
+    let v=0;const up=setInterval(()=>{v=Math.min(.42,v+.02);hall.volume=v;if(v>=.42)clearInterval(up)},60);
+  }else{
+    let v=hall.volume;const dn=setInterval(()=>{v=Math.max(0,v-.04);hall.volume=v;
+      if(v<=0){clearInterval(dn);hall.pause()}},40);
+    sb.classList.remove('on');sl.textContent='звук зала';
+  }
+});
+</script>
+</body>
+</html>
